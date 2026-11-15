@@ -220,6 +220,7 @@ export default function App() {
             <div><strong>{nf(totalHa)}</strong><span>hectares</span></div>
             <div><strong>{visible.filter(a => a.status === "verifier").length}</strong><span>à vérifier</span></div>
           </div>
+          {visible[0] && <button className="m-primary" onClick={() => setSelectedId(visible[0].alert.id)}>Ouvrir la zone prioritaire : {visible[0].alert.id} →</button>}
           <ul className="m-list">{visible.map(({ alert, status }) => <li key={alert.id}>
             <button onClick={() => setSelectedId(alert.id)}>
               <span className="m-row"><strong>{alert.id}</strong><em style={{ background: STATUS_COLOR[status] }}>{STATUS_LABEL[status]}</em></span>
@@ -235,8 +236,17 @@ export default function App() {
         const { alert: a, status } = selected;
         const done = saved.verifications[a.id];
         const max = Math.max(...a.areas);
+        const position = visible.findIndex(v => v.alert.id === a.id);
+        const previous = visible[position - 1], next = visible[position + 1];
         return <>
-          <button className="m-back" onClick={() => setSelectedId(null)}>← Toutes les alertes</button>
+          <div className="m-nav">
+            <button className="m-back" onClick={() => setSelectedId(null)}>← Toutes les alertes</button>
+            <span>
+              <button className="m-secondary" disabled={!previous} onClick={() => previous && setSelectedId(previous.alert.id)} aria-label="Zone précédente">‹</button>
+              <b>{position + 1} / {visible.length}</b>
+              <button className="m-secondary" disabled={!next} onClick={() => next && setSelectedId(next.alert.id)} aria-label="Zone suivante">›</button>
+            </span>
+          </div>
           <section className="m-card">
             <span className="m-row"><h2>Fiche {a.id}</h2><em style={{ background: STATUS_COLOR[status] }}>{STATUS_LABEL[status]}</em></span>
             <div className="m-metric">{nf(a.areaHa)} <small>ha</small></div>
@@ -264,6 +274,7 @@ export default function App() {
               <span>Nature : {done.nature}</span><span>Autorisation : {done.permit}</span>
               {done.gps && <span>Position : {done.gps}</span>}{done.notes && <span>Notes : {done.notes}</span>}
               <button className="m-link" onClick={() => setSaved(s => { const v = { ...s.verifications }; delete v[a.id]; return { ...s, verifications: v }; })}>Modifier le relevé</button>
+              {next && <button className="m-primary" onClick={() => setSelectedId(next.alert.id)}>Zone suivante : {next.alert.id} →</button>}
             </div> : <form className="m-form" onSubmit={submitVerification}>
               <label>Nature constatée<select value={form.nature} onChange={e => setForm({ ...form, nature: e.target.value })}>{NATURES.map(n => <option key={n}>{n}</option>)}</select></label>
               <label>Autorisation<select value={form.permit} onChange={e => setForm({ ...form, permit: e.target.value })}>{PERMITS.map(n => <option key={n}>{n}</option>)}</select></label>

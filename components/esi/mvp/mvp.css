@@ -57,3 +57,5 @@
 .m-steps i{flex:none;display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#fff;border:1px solid #c9d0cc;font-style:normal;font-size:11px}
 .m-steps li.now{background:var(--green-soft);color:var(--green)}.m-steps li.now i{background:var(--green);border-color:var(--green);color:#fff}
 .m-steps li.done{color:var(--text)}.m-steps li.done i{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+.m-nav{display:flex;justify-content:space-between;align-items:center;gap:8px}.m-nav span{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.m-nav .m-secondary{min-height:30px;width:32px;padding:0;font-size:17px}.m-nav .m-secondary:disabled{opacity:.4;cursor:default}
