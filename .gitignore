@@ -3,4 +3,5 @@ node_modules/
 out/
 *.tsbuildinfo
 .env*
-.vercel/data/raw/
+.vercel/
+data/raw/
