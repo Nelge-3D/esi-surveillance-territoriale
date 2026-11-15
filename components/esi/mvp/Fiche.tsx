@@ -34,7 +34,7 @@ const DATA: { name: string; real: boolean; now: string; next: string }[] = [
   { name: "Détection des éléphants", real: false, now: "Positions, dates et effectifs de démonstration ; image de référence identique pour toutes les observations.", next: "Détection par Pléiades Neo : programmer des images à 30 cm autour des plantations enregistrées, puis y repérer les éléphants avec un modèle de détection d'objets entraîné sur des images annotées." },
   { name: "Migrations forcées", real: false, now: "Niveau de vigilance calculé sur les observations de démonstration.", next: "Relier dans le temps les détections Pléiades Neo, les pièges photographiques et les colliers GPS pour suivre les déplacements." },
   { name: "Relevés des écogardes", real: false, now: "Enregistrés dans le navigateur de l'appareil, sans partage.", next: "Base de données commune, comptes par agent et mode hors connexion sur le terrain." },
-  { name: "Agent IA", real: false, now: "Chaîne de calcul à règles explicites ; les fiches sont rédigées à partir de modèles de phrases.", next: "Agent fondé sur un modèle de langage, qui surveille les nouvelles acquisitions, rédige et priorise les alertes." },
+  { name: "Agent IA Orus", real: false, now: "Chaîne de calcul à règles explicites ; les fiches sont rédigées à partir de modèles de phrases.", next: "Agent fondé sur un modèle de langage, qui surveille les nouvelles acquisitions, rédige et priorise les alertes." },
 ];
 
 const GLOSSARY = [
@@ -70,13 +70,13 @@ export default function Fiche({ onClose }: { onClose: () => void }) {
 
       <section>
         <h3>En bref</h3>
-        <p>ESI détecte les pertes de couvert forestier sur des images radar NISAR, les classe par niveau de suspicion et guide les écogardes vers les zones à vérifier. Un second module surveille les migrations d'éléphants autour des plantations enregistrées. La zone pilote mesure environ 11 km sur 11 km et s'appuie sur {acquisitions.length} acquisitions, du {fmtDate(acquisitions[0])} au {fmtDate(acquisitions[acquisitions.length - 1])}.</p>
+        <p>ESI détecte les pertes de couvert forestier sur des images radar NISAR grâce à son agent d'analyse, Orus, qui les classe par niveau de suspicion et guide les écogardes vers les zones à vérifier. Un second module surveille les migrations d'éléphants autour des plantations enregistrées. La zone pilote mesure environ 11 km sur 11 km et s'appuie sur {acquisitions.length} acquisitions, du {fmtDate(acquisitions[0])} au {fmtDate(acquisitions[acquisitions.length - 1])}.</p>
       </section>
 
       <section>
-        <h3>Fonctionnement de l'agent d'analyse</h3>
+        <h3>Fonctionnement d'Orus, l'agent d'analyse</h3>
         <ol className="m-sheet-steps">{AGENT.map(([title, text], i) => <li key={title}><b>{i + 1}</b><div><strong>{title}</strong><span>{text}</span></div></li>)}</ol>
-        <p>L'agent ne conclut jamais seul à une infraction : une baisse du signal peut aussi venir de l'humidité du sol, d'une inondation ou d'un chantier autorisé. La vérification sur le terrain et le contrôle des autorisations restent indispensables.</p>
+        <p>Orus ne conclut jamais seul à une infraction : une baisse du signal peut aussi venir de l'humidité du sol, d'une inondation ou d'un chantier autorisé. La vérification sur le terrain et le contrôle des autorisations restent indispensables.</p>
       </section>
 
       <section>

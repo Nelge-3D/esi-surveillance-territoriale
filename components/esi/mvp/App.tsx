@@ -184,7 +184,7 @@ export default function App() {
         <p className="m-welcome-lead">Outil de surveillance territoriale</p>
         <p className="m-welcome-power">Powered by NISAR and NASA resources</p>
         <div className="m-welcome-actions">
-          <button onClick={() => enter("forest")}><strong>Observation forestière</strong><span>Détecter les pertes de couvert et guider les écogardes</span></button>
+          <button onClick={() => enter("forest")}><strong>Observation forestière</strong><span>Orus détecte les pertes de couvert et guide les écogardes</span></button>
           <button onClick={() => enter("plantation")}><strong>Protection des plantations</strong><span>Détecter les migrations forcées d'éléphants autour d'une plantation</span></button>
         </div>
         <small>{ZONE.name}, {ZONE.region}</small>
@@ -205,9 +205,9 @@ export default function App() {
       <ol className="m-steps" aria-label="Étapes du parcours">{steps.map((label, i) => <li key={label} className={i < step ? "done" : i === step ? "now" : ""} aria-current={i === step ? "step" : undefined}><i>{i < step ? "✓" : i + 1}</i><span>{label}</span></li>)}</ol>
       {module === "forest" && !selected && <>
         <section className="m-card">
-          <h2>Agent d'analyse radar</h2>
-          <p>Compare {acquisitions.length} acquisitions NISAR réelles espacées de {REPEAT_DAYS} jours, du {fmtShort(acquisitions[0])} au {fmtDate(acquisitions[LAST])}, puis classe les baisses de rétrodiffusion.</p>
-          <button className="m-primary" disabled={running} onClick={runAnalysis}>{running ? "Analyse en cours…" : saved.analysed ? "Relancer l'analyse" : "Lancer l'analyse"}</button>
+          <h2>Orus · agent d'analyse radar</h2>
+          <p>Orus compare {acquisitions.length} acquisitions NISAR réelles espacées de {REPEAT_DAYS} jours, du {fmtShort(acquisitions[0])} au {fmtDate(acquisitions[LAST])}, puis classe les baisses de rétrodiffusion.</p>
+          <button className="m-primary" disabled={running} onClick={runAnalysis}>{running ? "Orus analyse…" : saved.analysed ? "Relancer Orus" : "Lancer Orus"}</button>
           {log.length > 0 && <ol className="m-log">{log.map(l => <li key={l}>{l}</li>)}</ol>}
         </section>
         {saved.analysed && !running && <>
@@ -225,7 +225,7 @@ export default function App() {
             </button>
           </li>)}</ul>
         </>}
-        {!saved.analysed && !running && <p className="m-hint">Aucune alerte pour l'instant. Lancez l'analyse pour détecter les baisses de rétrodiffusion sur la zone pilote.</p>}
+        {!saved.analysed && !running && <p className="m-hint">Aucune alerte pour l'instant. Lancez Orus pour détecter les baisses de rétrodiffusion sur la zone pilote.</p>}
       </>}
 
       {module === "forest" && selected && (() => {
