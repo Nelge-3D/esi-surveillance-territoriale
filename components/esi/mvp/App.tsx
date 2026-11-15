@@ -154,6 +154,16 @@ export default function App() {
     ? (!saved.analysed || running ? 0 : !selected ? 1 : saved.verifications[selected.alert.id] ? 3 : 2)
     : (!plantation ? 0 : scanning ? 1 : 2);
 
+  // Page d'accueil : elle s'efface en fondu, puis les étapes du parcours sont mises en avant quelques secondes.
+  const [welcome, setWelcome] = useState<"shown" | "leaving" | "gone">("shown");
+  const [guiding, setGuiding] = useState(false);
+  function enter(target: "forest" | "plantation") {
+    setModule(target); setShowRadar(target === "forest"); setSelectedId(null);
+    setWelcome("leaving"); setGuiding(true);
+    setTimeout(() => setWelcome("gone"), 900);
+    setTimeout(() => setGuiding(false), 5200);
+  }
+
   const totalHa = visible.reduce((s, a) => s + a.alert.areaHa, 0);
   const obsRow = (o: Obs) => <li key={o.id}>
     <button className="m-obs" onClick={() => setOpenObs(openObs === o.id ? null : o.id)}>
@@ -164,7 +174,20 @@ export default function App() {
     {openObs === o.id && o.source.startsWith("Pléiades") && <OpticalChip />}
   </li>;
 
-  return <div className="m-app">
+  return <div className={"m-app" + (guiding ? " guiding" : "")}>
+    {welcome !== "gone" && <section className={"m-welcome" + (welcome === "leaving" ? " leaving" : "")} aria-label="Accueil">
+      <div className="m-welcome-box">
+        <span className="m-welcome-mark" aria-hidden="true">◈</span>
+        <h1>Welcome to ESI</h1>
+        <p className="m-welcome-lead">Outil de surveillance territoriale</p>
+        <p className="m-welcome-power">Powered by NISAR and NASA resources</p>
+        <div className="m-welcome-actions">
+          <button onClick={() => enter("forest")}><strong>Observation forestière</strong><span>Détecter les pertes de couvert et guider les écogardes</span></button>
+          <button onClick={() => enter("plantation")}><strong>Protection des plantations</strong><span>Surveiller les éléphants autour d'une plantation</span></button>
+        </div>
+        <small>{ZONE.name}, {ZONE.region}</small>
+      </div>
+    </section>}
     <header className="m-top">
       <div className="m-brand"><span aria-hidden="true">◈</span><div><strong>ESI</strong><small>Surveillance territoriale · {ZONE.name}, {ZONE.region}</small></div></div>
       <nav aria-label="Modules">

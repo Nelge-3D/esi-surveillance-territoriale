@@ -60,3 +60,24 @@
 .m-nav{display:flex;justify-content:space-between;align-items:center;gap:8px}.m-nav span{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
 .m-nav .m-secondary{min-height:30px;width:32px;padding:0;font-size:17px}.m-nav .m-secondary:disabled{opacity:.4;cursor:default}
 .m-elephant-preview .m-link{display:block;margin-top:6px;cursor:pointer}
+
+/* Page d'accueil : fond NISAR réel sous un voile vert, fondu vers l'interface. */
+.m-welcome{position:fixed;inset:0;z-index:3000;display:grid;place-items:center;padding:24px;color:#fff;text-align:center;background:linear-gradient(160deg,#0b5c3aee,#0f7a4df2 55%,#0a4a30f5),url("/nisar/20260719.webp") center/cover;opacity:1;transition:opacity .9s ease,transform .9s ease}
+.m-welcome.leaving{opacity:0;transform:scale(1.04);pointer-events:none}
+.m-welcome-box{display:grid;justify-items:center;gap:10px;max-width:640px}
+.m-welcome-box>*{animation:m-rise .7s ease both}.m-welcome-box>:nth-child(2){animation-delay:.12s}.m-welcome-box>:nth-child(3){animation-delay:.24s}.m-welcome-box>:nth-child(4){animation-delay:.36s}.m-welcome-box>:nth-child(5){animation-delay:.5s}.m-welcome-box>:nth-child(6){animation-delay:.62s}
+.m-welcome-mark{display:grid;place-items:center;width:64px;height:64px;border-radius:16px;background:#fff;color:var(--green);font-size:34px}
+.m-welcome h1{margin:8px 0 0;font-size:clamp(34px,6vw,60px);line-height:1.05;letter-spacing:-.03em}
+.m-app .m-welcome p{color:#fff}.m-welcome-lead{font-size:clamp(16px,2.4vw,22px);font-weight:600}
+.m-welcome-power{font-size:13px;letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+.m-welcome-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;width:100%}
+.m-welcome-actions button{display:grid;gap:4px;padding:16px;border-radius:12px;border:1px solid #ffffff73;background:#ffffff1f;color:#fff;text-align:left;transition:background .2s,transform .2s}
+.m-welcome-actions button:hover{background:#fff;color:var(--green);transform:translateY(-2px)}
+.m-welcome-actions strong{font-size:15px}.m-welcome-actions span{font-size:12px;opacity:.9}
+.m-welcome small{margin-top:10px;opacity:.8}
+@keyframes m-rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+/* Après le fondu : les étapes du parcours sont mises en avant. */
+.m-app.guiding .m-steps li.now{animation:m-guide 1.3s ease 3}
+@keyframes m-guide{0%,100%{box-shadow:0 0 0 0 #0f7a4d00}50%{box-shadow:0 0 0 5px #0f7a4d40}}
+@media(max-width:560px){.m-welcome-actions{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.m-welcome,.m-welcome-box>*,.m-app.guiding .m-steps li.now{animation:none;transition:none}}
