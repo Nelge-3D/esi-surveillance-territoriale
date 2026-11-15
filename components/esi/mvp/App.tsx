@@ -2,13 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Fiche from "./Fiche";
+import Phone from "./Phone";
 import MapView, { STATUS_COLOR } from "./MapView";
 import { EXAMPLE_PLANTATION, NEAR_KM, REPEAT_DAYS, WIDE_KM, ZONE, acquisitions, assess, buildAlerts, elephants, fmtDate, fmtShort, inZone, kmText, nf, type Alert, type Elephant, type LL, type Obs } from "./data";
 import "./mvp.css";
 
 type Verification = { nature: string; permit: string; notes: string; date: string; gps: string };
 type Plantation = { id: string; name: string; crop: string; pt: LL };
-type Saved = { analysed: boolean; verifications: Record<string, Verification>; plantations: Plantation[]; reports: Elephant[] };
+type Saved = { analysed: boolean; verifications: Record<string, Verification>; plantations: Plantation[]; reports: Elephant[]; sent?: Record<string, string> };
 
 const STORE = "esi-mvp-v2";
 const STATUS_LABEL: Record<string, string> = { surveiller: "À surveiller", verifier: "À vérifier", confirme: "Confirmé sur le terrain", ecarte: "Écartée après vérification" };
@@ -159,6 +160,7 @@ export default function App() {
   const [welcome, setWelcome] = useState<"shown" | "leaving" | "gone">("shown");
   const [guiding, setGuiding] = useState(false);
   const [sheet, setSheet] = useState(false);
+  const [phone, setPhone] = useState(false);
   function enter(target: "forest" | "plantation") {
     setModule(target); setShowRadar(target === "forest"); setSelectedId(null);
     setWelcome("leaving"); setGuiding(true);
@@ -232,6 +234,7 @@ export default function App() {
         const { alert: a, status } = selected;
         const done = saved.verifications[a.id];
         const max = Math.max(...a.areas);
+        const sentAt = saved.sent?.[a.id];
         const position = visible.findIndex(v => v.alert.id === a.id);
         const previous = visible[position - 1], next = visible[position + 1];
         return <>
@@ -261,6 +264,10 @@ export default function App() {
           <section className="m-card">
             <h3>Mission de l'écogarde</h3>
             <p>Accès conseillé : {a.access.name}, {kmText(a.access.km)} de la zone.</p>
+            {sentAt
+              ? <div className="m-done"><strong>Alerte envoyée à l'écogarde à {new Date(sentAt).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}</strong><button className="m-link" onClick={() => setPhone(true)}>Voir sur le téléphone de l'écogarde</button></div>
+              : <button className="m-primary" onClick={() => { setSaved(s => ({ ...s, sent: { ...s.sent, [a.id]: new Date().toISOString() } })); setPhone(true); }}>Envoyer l'alerte à l'écogarde</button>}
+            {phone && sentAt && <Phone alert={a} status={STATUS_LABEL[status].toLowerCase()} sentAt={sentAt} onClose={() => setPhone(false)} />}
             <div className="m-actions">
               <a className="m-secondary" target="_blank" rel="noreferrer" href={`https://www.google.com/maps/dir/?api=1&destination=${a.center[0].toFixed(5)},${a.center[1].toFixed(5)}`}>Itinéraire ↗</a>
               <button className="m-secondary" onClick={() => download(a, status)}>Télécharger la fiche</button>

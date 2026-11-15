@@ -116,3 +116,23 @@
 .m-sheet em.real{background:var(--green-soft);color:var(--green)}.m-sheet em.demo{background:#fdf1d3;color:#7a5200}
 @media(max-width:640px){.m-sheet article{padding:16px}.m-sheet-list div,.m-sheet-list.glossary div{grid-template-columns:1fr;gap:2px}}
 @media print{.m-top,.m-side,.m-mapwrap,.m-sheet header button{display:none!important}.m-sheet{position:static;background:none;padding:0;overflow:visible}.m-sheet article{box-shadow:none;width:100%}.m-app{display:block;height:auto}}
+
+/* Aperçu du téléphone de l'écogarde. */
+.m-phone-wrap{position:fixed;inset:0;z-index:2600;display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;padding:20px;background:#0b1f16cc;overflow-y:auto}
+.m-phone-side{max-width:300px;display:grid;gap:12px;color:#fff}.m-app .m-phone-side h2{font-size:22px}.m-app .m-phone-side p{color:#e3f1ea;font-size:14px}
+.m-phone{position:relative;width:300px;height:600px;flex:none;border-radius:42px;border:10px solid #101614;background:linear-gradient(165deg,#0f7a4d,#0a3f2a 60%,#07271b);box-shadow:0 20px 60px #0008;overflow:hidden;color:#fff}
+.m-phone-notch{position:absolute;top:8px;left:50%;width:90px;height:22px;transform:translateX(-50%);border-radius:14px;background:#101614;z-index:2}
+.m-phone-lock{height:100%;display:flex;flex-direction:column;align-items:center;padding:74px 14px 20px}
+.m-phone-lock>strong{font-size:62px;font-weight:300;line-height:1}.m-phone-lock>span{margin-top:4px;font-size:14px;opacity:.85;text-transform:capitalize}
+.m-phone-notif{margin-top:44px;width:100%;display:grid;gap:4px;padding:12px;border:0;border-radius:18px;background:#fffffff0;color:#18211d;text-align:left;font-size:12.5px;line-height:1.35;opacity:0;transform:translateY(-26px) scale(.96);transition:opacity .45s ease,transform .45s cubic-bezier(.2,.9,.3,1.2);cursor:pointer}
+.m-phone-notif.in{opacity:1;transform:none}.m-phone-notif b{font-size:14px}
+.m-phone-app{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#0f7a4d;text-transform:uppercase;letter-spacing:.04em}
+.m-phone-app i{display:grid;place-items:center;width:18px;height:18px;border-radius:5px;background:#0f7a4d;color:#fff;font-style:normal;font-size:11px}
+.m-phone-app small{margin-left:auto;font-weight:400;color:#5f6c66;text-transform:none;letter-spacing:0}
+.m-phone-mission{height:100%;display:grid;align-content:start;gap:10px;padding:44px 14px 16px;background:#fff;color:#18211d;font-size:13px}
+.m-phone-mission header{display:flex;align-items:center;gap:6px;font-weight:700;color:#0f7a4d}.m-phone-mission header i{font-style:normal}
+.m-app .m-phone-mission h3{font-size:22px}
+.m-phone-mission em{justify-self:start;font-style:normal;font-weight:700;font-size:11px;padding:3px 8px;border-radius:5px;background:#ffe3d6;color:#a03c12;text-transform:capitalize}
+.m-phone-mission dl{margin:0;display:grid}.m-phone-mission dl div{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px solid #e1e5e3}
+.m-phone-mission dt{color:#5f6c66}.m-phone-mission dd{margin:0;font-weight:650;text-align:right}
+@media(max-width:720px){.m-phone-side{text-align:center}}
