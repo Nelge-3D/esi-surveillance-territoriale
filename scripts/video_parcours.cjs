@@ -42,7 +42,13 @@ const SIZE = { width: 1280, height: 720 };
     document.addEventListener("mousedown", () => cursor.classList.add("down"), true);
     document.addEventListener("mouseup", () => setTimeout(() => cursor.classList.remove("down"), 220), true);
   });
-  const say = text => page.evaluate(t => { document.getElementById("v-caption").textContent = t; }, text);
+  let first = 0;
+  const marks = [];
+  const say = async text => {
+    if (!first) first = Date.now();
+    marks.push(((Date.now() - first) / 1000).toFixed(1) + " s  " + text);
+    await page.evaluate(t => { document.getElementById("v-caption").textContent = t; }, text);
+  };
   const click = async (locator, pause = 300) => {
     const box = await locator.boundingBox();
     await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 20 });
@@ -74,7 +80,7 @@ const SIZE = { width: 1280, height: 720 };
   await hover(page.locator(".m-list button").nth(1));
   await wait(900);
   await hover(page.locator(".m-legend"), 30);
-  await wait(2300);
+  await wait(1600);
 
   // Plan 4 - zone prioritaire, vue radar puis vue réelle (0:25 à 0:38)
   await say("L'écogarde ouvre la zone prioritaire, compare la vue radar et la vue réelle...");
@@ -87,7 +93,19 @@ const SIZE = { width: 1280, height: 720 };
   await say("... et consulte le score de suspicion avant de se rendre sur place.");
   await hover(page.locator(".m-side .m-card").first());
   await page.mouse.wheel(0, 520);
+  await wait(1500);
+
+  // Plan 4 bis - envoi de l'alerte à l'écogarde
+  await say("D'un clic, Orus envoie l'alerte à l'écogarde, qui la reçoit sur son téléphone.");
+  const send = page.getByRole("button", { name: "Envoyer l'alerte à l'écogarde" });
+  await send.scrollIntoViewIfNeeded();
+  await wait(400);
+  await click(send);
+  await wait(2600);
+  await click(page.locator(".m-phone-notif"));
   await wait(2400);
+  await click(page.locator(".m-phone-side button"));
+  await wait(500);
 
   // Plan 5 - scanner ma plantation (0:38 à 0:52)
   await say("L'agriculteur enregistre sa position. Orus scanne 5 et 20 kilomètres autour de sa plantation.");
@@ -102,9 +120,9 @@ const SIZE = { width: 1280, height: 720 };
   await hover(page.locator(".m-vig"));
   await wait(2000);
   await click(page.locator(".m-eleph.near").first());
-  await wait(3400);
+  await wait(2800);
   await say("E.S.I - Earth Surface Intelligence");
-  await wait(1400);
+  await wait(1000);
 
   const video = page.video();
   await context.close();
@@ -113,5 +131,6 @@ const SIZE = { width: 1280, height: 720 };
   fs.renameSync(await video.path(), target);
   await browser.close();
   console.log("intro", intro.toFixed(2));
+  for (const mark of marks) console.log(mark);
   console.log("ok", target, Math.round(fs.statSync(target).size / 1024) + " Ko");
 })().catch(error => { console.error(error); process.exit(1); });
