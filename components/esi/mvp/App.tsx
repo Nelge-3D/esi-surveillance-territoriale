@@ -332,6 +332,57 @@ export default function App() {
         {showRadar && module === "forest" && <label><input type="checkbox" checked={composite} onChange={e => setComposite(e.target.checked)} /> Baisse de rétrodiffusion détectée (rouge)</label>}
         <label><input type="checkbox" checked={showContext} onChange={e => setShowContext(e.target.checked)} /> {module === "forest" ? "Contexte : routes, rivières, périmètres, RADD" : "Contexte : routes, rivières, périmètres"}</label>
       </div>
+      <details className="m-legend" open>
+        <summary>Légende</summary>
+        {module === "forest" ? <>
+          <h4>Zones détectées</h4>
+          <ul>
+            <li><i className="lg-box" style={{ borderColor: STATUS_COLOR.verifier }} />À vérifier</li>
+            <li><i className="lg-box" style={{ borderColor: STATUS_COLOR.surveiller }} />À surveiller</li>
+            <li><i className="lg-box" style={{ borderColor: STATUS_COLOR.confirme }} />Confirmé sur le terrain</li>
+            <li><i className="lg-box" style={{ borderColor: STATUS_COLOR.ecarte }} />Écartée après vérification</li>
+          </ul>
+          {showRadar && <>
+            <h4>Couleurs de la vue radar NISAR</h4>
+            <ul>
+              <li><i className="lg-fill" style={{ background: "#b9c832" }} />Vert-jaune : forêt et végétation dense</li>
+              <li><i className="lg-fill" style={{ background: "#5b2bd0" }} />Violet : sol nu ou végétation basse</li>
+              <li><i className="lg-fill" style={{ background: "#e58be0" }} />Rose : bâtiments et zones construites</li>
+              <li><i className="lg-fill" style={{ background: "#10106a" }} />Bleu sombre : eau</li>
+              <li><i className="lg-fill" style={{ background: "#ff4230" }} />Rouge : baisse du signal détectée</li>
+            </ul>
+          </>}
+          <h4>Contexte</h4>
+          <ul>
+            <li><i className="lg-line" style={{ borderColor: "#b7f5d2", borderTopStyle: "dashed" }} />Zone analysée</li>
+            <li><i className="lg-line" style={{ borderColor: "#ffe9a8" }} />Route</li>
+            <li><i className="lg-line" style={{ borderColor: "#f5f5f5", borderTopStyle: "dashed" }} />Voie ferrée</li>
+            <li><i className="lg-line" style={{ borderColor: "#4aa8ff" }} />Rivière</li>
+            <li><i className="lg-box" style={{ borderColor: "#62c9f2", borderStyle: "dashed" }} />Périmètre attribué</li>
+            <li><i className="lg-box" style={{ borderColor: "#63f0bb", borderStyle: "dashed" }} />Aire protégée</li>
+            <li><i className="lg-dot" style={{ background: "#e85dff" }} />Alerte RADD</li>
+          </ul>
+        </> : <>
+          <h4>Plantation</h4>
+          <ul>
+            <li><span className="lg-emoji">🌱</span>Centre de la plantation</li>
+            <li><i className="lg-ring" style={{ borderColor: "#ffb347" }} />0 à {NEAR_KM} km : surveillance rapprochée</li>
+            <li><i className="lg-ring" style={{ borderColor: "#62c9f2", borderStyle: "dashed" }} />{NEAR_KM} à {WIDE_KM} km : surveillance étendue</li>
+          </ul>
+          <h4>Migrations d'éléphants</h4>
+          <ul>
+            <li><span className="lg-emoji" style={{ borderColor: "#ff7a45" }}>🐘</span>À moins de {NEAR_KM} km</li>
+            <li><span className="lg-emoji" style={{ borderColor: "#2f9fd6" }}>🐘</span>Entre {NEAR_KM} et {WIDE_KM} km</li>
+            <li><span className="lg-emoji" style={{ opacity: 0.55 }}>🐘</span>Au-delà de {WIDE_KM} km</li>
+          </ul>
+          <h4>Contexte</h4>
+          <ul>
+            <li><i className="lg-line" style={{ borderColor: "#ffe9a8" }} />Route</li>
+            <li><i className="lg-line" style={{ borderColor: "#4aa8ff" }} />Rivière</li>
+            <li><i className="lg-box" style={{ borderColor: "#63f0bb", borderStyle: "dashed" }} />Aire protégée</li>
+          </ul>
+        </>}
+      </details>
     </main>
   </div>;
 }
