@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Fiche from "./Fiche";
 import MapView, { STATUS_COLOR } from "./MapView";
 import { EXAMPLE_PLANTATION, NEAR_KM, REPEAT_DAYS, WIDE_KM, ZONE, acquisitions, assess, buildAlerts, elephants, fmtDate, fmtShort, inZone, kmText, nf, type Alert, type Elephant, type LL, type Obs } from "./data";
 import "./mvp.css";
@@ -157,6 +158,7 @@ export default function App() {
   // Page d'accueil : elle s'efface en fondu, puis les étapes du parcours sont mises en avant quelques secondes.
   const [welcome, setWelcome] = useState<"shown" | "leaving" | "gone">("shown");
   const [guiding, setGuiding] = useState(false);
+  const [sheet, setSheet] = useState(false);
   function enter(target: "forest" | "plantation") {
     setModule(target); setShowRadar(target === "forest"); setSelectedId(null);
     setWelcome("leaving"); setGuiding(true);
@@ -195,7 +197,9 @@ export default function App() {
         <button aria-pressed={module === "plantation"} onClick={() => { setModule("plantation"); setSelectedId(null); setShowRadar(false); }}>Protection des plantations</button>
       </nav>
       <span className="m-demo">Données NISAR réelles</span>
+      <button className="m-sheet-open" onClick={() => setSheet(true)}>Fiche technique</button>
     </header>
+    {sheet && <Fiche onClose={() => setSheet(false)} />}
 
     <aside className="m-side" ref={side}>
       <ol className="m-steps" aria-label="Étapes du parcours">{steps.map((label, i) => <li key={label} className={i < step ? "done" : i === step ? "now" : ""} aria-current={i === step ? "step" : undefined}><i>{i < step ? "✓" : i + 1}</i><span>{label}</span></li>)}</ol>
