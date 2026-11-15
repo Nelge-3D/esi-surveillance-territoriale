@@ -180,12 +180,12 @@ export default function App() {
     {welcome !== "gone" && <section className={"m-welcome" + (welcome === "leaving" ? " leaving" : "")} aria-label="Accueil">
       <div className="m-welcome-box">
         <span className="m-welcome-mark" aria-hidden="true">◈</span>
-        <h1>Welcome to ESI</h1>
-        <p className="m-welcome-lead">Outil de surveillance territoriale</p>
-        <p className="m-welcome-power">Powered by NISAR and NASA resources</p>
+        <h1>E.S.I</h1>
+        <p className="m-welcome-lead">Earth Surface Intelligence · outil de surveillance territoriale</p>
+        <p className="m-welcome-power">Propulsé par NISAR et les SIG</p>
         <div className="m-welcome-actions">
-          <button onClick={() => enter("forest")}><strong>Observation forestière</strong><span>Orus détecte les pertes de couvert et guide les écogardes</span></button>
-          <button onClick={() => enter("plantation")}><strong>Protection des plantations</strong><span>Détecter les migrations forcées d'éléphants autour d'une plantation</span></button>
+          <button onClick={() => enter("forest")}><strong>Observation forestière</strong><span>Orus, agent d'analyse radar : il repère les pertes de couvert et classe les zones prioritaires</span></button>
+          <button onClick={() => enter("plantation")}><strong>Protection des plantations</strong><span>Orus détecte les migrations d'éléphants autour de votre plantation</span></button>
         </div>
         <small>{ZONE.name}, {ZONE.region}</small>
       </div>
@@ -299,7 +299,7 @@ export default function App() {
 
         {plantation && vigilance && (scanning ? <p className="m-hint">Scan des périmètres en cours…</p> : <>
           <section className={"m-card m-vig " + vigilance.level}>
-            <span className="m-row"><h3>{plantation.name} · {plantation.crop}</h3><em>Vigilance {vigilance.level.toLowerCase()}</em></span>
+            <span className="m-row"><h3>{plantation.name} · {plantation.crop}</h3><em>Zone à risque {{ Élevée: "élevé", Modérée: "modéré", Faible: "faible" }[vigilance.level]}</em></span>
             <ul>{vigilance.reasons.map(r => <li key={r}>{r}</li>)}</ul>
             <div className="m-actions">
               <button className="m-secondary" aria-pressed={pick === "report"} onClick={() => setPick(pick === "report" ? null : "report")}>{pick === "report" ? "Cliquez sur la carte…" : "Signaler un éléphant"}</button>
