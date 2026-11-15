@@ -1,5 +1,5 @@
-import Dashboard from "../components/esi/Dashboard";
+import Loader from "../components/esi/mvp/Loader";
 
 export default function Home() {
-  return <Dashboard />;
+  return <Loader />;
 }
