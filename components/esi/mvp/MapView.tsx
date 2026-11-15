@@ -191,5 +191,9 @@ export default function MapView(props: Props) {
     return () => { cancelAnimationFrame(frame); sweep.remove(); };
   }, [props.scanTick]);
 
-  return <div ref={el} className={"m-map" + (props.picking ? " picking" : "")} />;
+  // La classe est basculée directement sur l'élément : la passer par React réécrirait
+  // l'attribut class et effacerait les classes posées par Leaflet, dont celle qui borne la carte.
+  useEffect(() => { el.current?.classList.toggle("picking", props.picking); }, [props.picking]);
+
+  return <div ref={el} className="m-map" />;
 }

@@ -32,7 +32,7 @@
 .m-obslist{display:grid;gap:7px}.m-obs span{color:var(--muted);font-size:12px}
 .m-chip{margin-top:6px!important}.m-chip canvas,.m-chip img{width:100%;height:auto;border-radius:8px;display:block}.m-chip figcaption{font-size:11px;color:var(--muted);margin-top:4px}
 .m-foot{margin-top:auto;display:grid;gap:6px;padding-top:8px;border-top:1px solid var(--edge)}.m-foot p{font-size:11px}
-.m-mapwrap{position:relative;min-height:0}.m-map{position:absolute;inset:0;background:#e9ecea}.m-map.picking{cursor:crosshair}.m-map.picking .leaflet-interactive{cursor:crosshair}
+.m-mapwrap{position:relative;min-height:0;min-width:0;overflow:hidden}.m-map{position:absolute;inset:0;overflow:hidden;background:#e9ecea}.m-map.picking{cursor:crosshair}.m-map.picking .leaflet-interactive{cursor:crosshair}
 .m-map .leaflet-tooltip{background:#fff;color:var(--text);border-color:#c9d0cc;font-weight:650}.m-map .leaflet-tooltip::before{display:none}
 .m-layers{position:absolute;top:10px;right:10px;z-index:640;display:grid;gap:7px;max-width:290px;padding:11px;border-radius:10px;border:1px solid var(--edge);background:#fffffff2;color:var(--text);font-size:12px;box-shadow:0 2px 10px #0002}
 .m-layers label{display:flex;align-items:center;gap:7px}.m-layers input{accent-color:var(--green)}.m-dates{display:flex;flex-wrap:wrap;gap:4px}.m-dates button{padding:4px 7px;font-size:11px}
