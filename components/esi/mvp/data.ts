@@ -247,28 +247,23 @@ export function buildAlerts(): Alert[] {
 export const NEAR_KM = 5;
 export const WIDE_KM = 20;
 export type Obs = Elephant & { km: number; date: Date };
-export type Vigilance = { level: "Élevée" | "Modérée" | "Faible"; reasons: string[]; near: Obs[]; wide: Obs[]; forest: { alert: Alert; km: number; status: string }[] };
+export type Vigilance = { level: "Élevée" | "Modérée" | "Faible"; reasons: string[]; near: Obs[]; wide: Obs[] };
 
-export function assess(center: LL, observations: Elephant[], alerts: { alert: Alert; status: string }[]): Vigilance {
+// Le module plantations ne s'appuie que sur les déplacements d'éléphants détectés.
+export function assess(center: LL, observations: Elephant[]): Vigilance {
   const obs = observations
     .map(o => ({ ...o, km: distKm(center, o.pt), date: daysAgo(o.days) }))
     .filter(o => o.km <= WIDE_KM)
     .sort((a, b) => a.km - b.km);
   const near = obs.filter(o => o.km <= NEAR_KM);
   const wide = obs.filter(o => o.km > NEAR_KM);
-  const forest = alerts
-    .map(a => ({ ...a, km: distKm(center, a.alert.center) }))
-    .filter(a => a.km <= WIDE_KM && a.status !== "ecarte")
-    .sort((a, b) => a.km - b.km);
 
   const reasons: string[] = [];
   const recentNear = near.filter(o => o.days <= 7);
   const recentWide = wide.filter(o => o.days <= 14);
-  const strongForest = forest.filter(f => f.status === "verifier" || f.status === "confirme");
-  if (recentNear.length) reasons.push(`${recentNear.length} observation(s) d'éléphants à moins de ${NEAR_KM} km au cours des 7 derniers jours.`);
-  if (recentWide.length) reasons.push(`${recentWide.length} observation(s) entre ${NEAR_KM} et ${WIDE_KM} km au cours des 14 derniers jours.`);
-  if (strongForest.length) reasons.push(`${strongForest.length} perte(s) de couvert à vérifier ou confirmée(s) dans un rayon de ${WIDE_KM} km : l'habitat des éléphants peut être perturbé.`);
-  if (!reasons.length) reasons.push("Aucune observation récente ni perte de couvert notable dans les périmètres.");
-  const level = recentNear.length ? "Élevée" : recentWide.length || strongForest.length ? "Modérée" : "Faible";
-  return { level, reasons, near, wide, forest };
+  if (recentNear.length) reasons.push(`${recentNear.length} migration(s) d'éléphants détectée(s) à moins de ${NEAR_KM} km au cours des 7 derniers jours.`);
+  if (recentWide.length) reasons.push(`${recentWide.length} migration(s) détectée(s) entre ${NEAR_KM} et ${WIDE_KM} km au cours des 14 derniers jours.`);
+  if (!reasons.length) reasons.push("Aucune migration récente détectée dans les périmètres.");
+  const level = recentNear.length ? "Élevée" : recentWide.length ? "Modérée" : "Faible";
+  return { level, reasons, near, wide };
 }

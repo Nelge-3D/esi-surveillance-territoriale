@@ -121,8 +121,8 @@ export default function MapView(props: Props) {
     if (protectedArea.ring.length) L.polygon(protectedArea.ring, { color: "#63f0bb", weight: 2, dashArray: "6 5", fillOpacity: 0.06 }).bindTooltip(protectedArea.name, { sticky: true }).addTo(s.context);
     for (const c of concessions) L.polygon(c.ring, { color: "#62c9f2", weight: 2, dashArray: "6 5", fillOpacity: 0.05 }).bindTooltip(c.name, { sticky: true }).addTo(s.context);
     for (const line of lines) L.polyline(line.pts, LINE_STYLE[line.kind]).bindTooltip(line.name, { sticky: true }).addTo(s.context);
-    for (const r of radd) L.circleMarker(r, { radius: 4, color: "#e85dff", weight: 2, fillOpacity: 0.5 }).bindTooltip("Alerte RADD").addTo(s.context);
-  }, [props.showContext]);
+    if (props.module === "forest") for (const r of radd) L.circleMarker(r, { radius: 4, color: "#e85dff", weight: 2, fillOpacity: 0.5 }).bindTooltip("Alerte RADD").addTo(s.context);
+  }, [props.showContext, props.module]);
 
   useEffect(() => {
     const s = m.current;

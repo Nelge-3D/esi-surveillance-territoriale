@@ -72,7 +72,7 @@ export default function App() {
   const selected = visible.find(a => a.alert.id === selectedId) ?? null;
   const plantation = saved.plantations.find(p => p.id === activeId) ?? null;
   const observations = useMemo(() => [...elephants, ...saved.reports], [saved.reports]);
-  const vigilance = useMemo(() => (plantation ? assess(plantation.pt, observations, visible) : null), [plantation, observations, visible]);
+  const vigilance = useMemo(() => (plantation ? assess(plantation.pt, observations) : null), [plantation, observations]);
 
   function runAnalysis() {
     setRunning(true); setLog([]); setSelectedId(null); setShowRadar(true); setComposite(false); setDateIdx(0);
@@ -183,7 +183,7 @@ export default function App() {
         <p className="m-welcome-power">Powered by NISAR and NASA resources</p>
         <div className="m-welcome-actions">
           <button onClick={() => enter("forest")}><strong>Observation forestière</strong><span>Détecter les pertes de couvert et guider les écogardes</span></button>
-          <button onClick={() => enter("plantation")}><strong>Protection des plantations</strong><span>Surveiller les éléphants autour d'une plantation</span></button>
+          <button onClick={() => enter("plantation")}><strong>Protection des plantations</strong><span>Détecter les migrations forcées d'éléphants autour d'une plantation</span></button>
         </div>
         <small>{ZONE.name}, {ZONE.region}</small>
       </div>
@@ -281,7 +281,7 @@ export default function App() {
       {module === "plantation" && <>
         <section className="m-card">
           <h2>Scanner ma plantation</h2>
-          <p>Placez-vous au centre de votre plantation, puis lancez le scan. La surveillance couvre {NEAR_KM} km (rapprochée) et {WIDE_KM} km (étendue).</p>
+          <p>Placez-vous au centre de votre plantation, puis lancez le scan. La détection des migrations d'éléphants couvre {NEAR_KM} km (rapprochée) et {WIDE_KM} km (étendue).</p>
           <div className="m-form">
             <label>Nom de la plantation<input value={name} maxLength={50} onChange={e => setName(e.target.value)} /></label>
             <label>Culture<select value={crop} onChange={e => setCrop(e.target.value)}>{["Manioc", "Banane plantain", "Cacao", "Autre"].map(c => <option key={c}>{c}</option>)}</select></label>
@@ -303,17 +303,10 @@ export default function App() {
             </div>
           </section>
           <section className="m-card">
-            <h3>Surveillance rapprochée · 0 à {NEAR_KM} km</h3>
-            {vigilance.near.length ? <ul className="m-obslist">{vigilance.near.map(obsRow)}</ul> : <p>Aucune observation.</p>}
-            <h3>Surveillance étendue · {NEAR_KM} à {WIDE_KM} km</h3>
-            {vigilance.wide.length ? <ul className="m-obslist">{vigilance.wide.map(obsRow)}</ul> : <p>Aucune observation.</p>}
-          </section>
-          <section className="m-card">
-            <h3>Pertes de couvert dans les {WIDE_KM} km</h3>
-            {!saved.analysed ? <p>Lancez l'analyse radar dans le module forestier pour croiser les alertes avec votre plantation.</p>
-              : vigilance.forest.length ? <ul className="m-obslist">{vigilance.forest.map(f => <li key={f.alert.id}><button className="m-obs" onClick={() => { setModule("forest"); setShowRadar(true); setSelectedId(f.alert.id); }}>
-                <strong>{nf(f.km)} km · {nf(f.alert.areaHa)} ha</strong><span>{f.alert.id} · {STATUS_LABEL[f.status]}</span>
-              </button></li>)}</ul> : <p>Aucune perte de couvert détectée.</p>}
+            <h3>Migrations détectées · 0 à {NEAR_KM} km</h3>
+            {vigilance.near.length ? <ul className="m-obslist">{vigilance.near.map(obsRow)}</ul> : <p>Aucune migration détectée.</p>}
+            <h3>Migrations détectées · {NEAR_KM} à {WIDE_KM} km</h3>
+            {vigilance.wide.length ? <ul className="m-obslist">{vigilance.wide.map(obsRow)}</ul> : <p>Aucune migration détectée.</p>}
           </section>
           <p className="m-hint">Les rayons définissent des zones de recherche. Le niveau de vigilance aide à s'organiser, il ne prédit pas le passage des éléphants.</p>
         </>)}
@@ -328,16 +321,16 @@ export default function App() {
 
     <main className="m-mapwrap">
       <MapView module={module} showRadar={showRadar} dateIdx={dateIdx} composite={composite} showContext={showContext} satellite
-        alerts={visible} selectedId={selectedId} plantation={plantation} scanTick={scanTick} observations={observations} picking={pick !== null}
+        alerts={module === "forest" ? visible : []} selectedId={selectedId} plantation={plantation} scanTick={scanTick} observations={observations} picking={pick !== null}
         onSelect={id => { setModule("forest"); setSelectedId(id); }} onMapClick={onMapClick} />
       <div className="m-layers">
         <div className="m-views" role="group" aria-label="Mode de vue">
           <button aria-pressed={!showRadar} onClick={() => setShowRadar(false)}>Vue réelle (Esri)</button>
           <button aria-pressed={showRadar} onClick={() => setShowRadar(true)}>Vue radar NISAR</button>
         </div>
-        <div className="m-dates">{acquisitions.map((d, i) => <button key={i} aria-pressed={dateIdx === i} onClick={() => setDateIdx(i)}>{fmtShort(d)}</button>)}</div>
-        {showRadar && <label><input type="checkbox" checked={composite} onChange={e => setComposite(e.target.checked)} /> Baisse de rétrodiffusion détectée (rouge)</label>}
-        <label><input type="checkbox" checked={showContext} onChange={e => setShowContext(e.target.checked)} /> Contexte : routes, rivières, périmètres, RADD</label>
+        {module === "forest" && <div className="m-dates">{acquisitions.map((d, i) => <button key={i} aria-pressed={dateIdx === i} onClick={() => setDateIdx(i)}>{fmtShort(d)}</button>)}</div>}
+        {showRadar && module === "forest" && <label><input type="checkbox" checked={composite} onChange={e => setComposite(e.target.checked)} /> Baisse de rétrodiffusion détectée (rouge)</label>}
+        <label><input type="checkbox" checked={showContext} onChange={e => setShowContext(e.target.checked)} /> {module === "forest" ? "Contexte : routes, rivières, périmètres, RADD" : "Contexte : routes, rivières, périmètres"}</label>
       </div>
     </main>
   </div>;
