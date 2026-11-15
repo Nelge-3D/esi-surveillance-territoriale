@@ -1,0 +1,6 @@
+data/
+scripts/
+docs/
+.next/
+node_modules/
+*.tsbuildinfo

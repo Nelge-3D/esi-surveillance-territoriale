@@ -5,3 +5,6 @@ out/
 .env*
 .vercel/
 data/raw/
+
+.vercel
+.env*
