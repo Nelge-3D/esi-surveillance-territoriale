@@ -52,3 +52,8 @@
 .m-elephant-preview figcaption{margin-top:7px;font-weight:700}
 .m-elephant-preview small{color:#5f6c66}
 .m-coord{padding:3px 8px;border-radius:5px;background:#fffffff2;border:1px solid var(--edge);color:#18211d;font-size:12px;font-variant-numeric:tabular-nums}
+.m-app .m-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.m-steps li{display:flex;align-items:center;gap:7px;padding:7px 8px;border-radius:9px;background:var(--soft);color:var(--muted);font-size:11.5px;font-weight:650;line-height:1.2}
+.m-steps i{flex:none;display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#fff;border:1px solid #c9d0cc;font-style:normal;font-size:11px}
+.m-steps li.now{background:var(--green-soft);color:var(--green)}.m-steps li.now i{background:var(--green);border-color:var(--green);color:#fff}
+.m-steps li.done{color:var(--text)}.m-steps li.done i{background:var(--green-soft);border-color:var(--green);color:var(--green)}

@@ -179,6 +179,12 @@ export default function App() {
     setSelectedId(null); setActiveId(null); setLog([]); setComposite(false); setMessage("");
   }
 
+  // Parcours guidé : trois étapes par module, l'étape en cours dépend de l'état de la session.
+  const steps = module === "forest" ? ["Analyser", "Choisir une zone", "Vérifier sur le terrain"] : ["Enregistrer", "Scanner", "Suivre les alertes"];
+  const step = module === "forest"
+    ? (!saved.analysed || running ? 0 : !selected ? 1 : saved.verifications[selected.alert.id] ? 3 : 2)
+    : (!plantation ? 0 : scanning ? 1 : 2);
+
   const totalHa = visible.reduce((s, a) => s + a.alert.areaHa, 0);
   const obsRow = (o: Obs) => <li key={o.id}>
     <button className="m-obs" onClick={() => setOpenObs(openObs === o.id ? null : o.id)}>
@@ -200,6 +206,7 @@ export default function App() {
     </header>
 
     <aside className="m-side" ref={side}>
+      <ol className="m-steps" aria-label="Étapes du parcours">{steps.map((label, i) => <li key={label} className={i < step ? "done" : i === step ? "now" : ""} aria-current={i === step ? "step" : undefined}><i>{i < step ? "✓" : i + 1}</i><span>{label}</span></li>)}</ol>
       {module === "forest" && !selected && <>
         <section className="m-card">
           <h2>Agent d'analyse radar</h2>
