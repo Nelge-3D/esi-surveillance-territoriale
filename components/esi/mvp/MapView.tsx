@@ -35,23 +35,28 @@ function elephantPreview(observation: Elephant) {
   const preview = L.DomUtil.create("figure", "m-elephant-preview");
   const scene = L.DomUtil.create("div", "m-elephant-scene", preview);
   const image = L.DomUtil.create("img", "", scene);
-  image.src = "/elephant-migration-dispersed.png";
-  image.alt = "Vue verticale d’un groupe d’éléphants en déplacement dans une clairière";
+  // Image de référence : éléphants détectés sur image satellite à très haute résolution.
+  const views = { detection: "/elephants-detection.jpg", raw: "/elephants-satellite.jpg" };
+  image.src = views.detection;
+  image.alt = "Image satellite avec les éléphants encadrés par la détection";
   image.width = 360;
-  image.height = 240;
-  for (const [left, top] of [[40.5, 31.9], [44.1, 34.5], [41.7, 37.7], [66.2, 32.9], [32.9, 52.3], [60.1, 48.8], [63.1, 51.8], [43.5, 65.7], [47.7, 63]]) {
-    const box = L.DomUtil.create("span", "m-elephant-box", scene);
-    box.style.left = left + "%";
-    box.style.top = top + "%";
-    box.setAttribute("aria-hidden", "true");
-  }
+  image.height = 360;
   const label = L.DomUtil.create("figcaption", "", preview);
-  label.textContent = "Migration illustrée · vue satellite";
+  label.textContent = `Détection sur image satellite · ${observation.count} éléphant(s) signalé(s)`;
   const details = L.DomUtil.create("small", "", preview);
-  details.textContent = fmtShort(daysAgo(observation.days)) + " · Illustration générique du scénario";
+  details.textContent = fmtShort(daysAgo(observation.days)) + " · Exemple de référence";
+  const toggle = L.DomUtil.create("button", "m-link", preview);
+  toggle.type = "button";
+  toggle.textContent = "Voir l'image sans les détections";
+  L.DomEvent.on(toggle, "click", event => {
+    L.DomEvent.stop(event);
+    const raw = image.src.endsWith(views.detection);
+    image.src = raw ? views.raw : views.detection;
+    toggle.textContent = raw ? "Voir les détections" : "Voir l'image sans les détections";
+  });
   image.addEventListener("error", () => {
     scene.hidden = true;
-    label.textContent = "Illustration satellite indisponible";
+    label.textContent = "Image satellite indisponible";
   }, { once: true });
   return preview;
 }

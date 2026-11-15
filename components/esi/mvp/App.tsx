@@ -26,46 +26,15 @@ const STEPS = [
 
 const statusOf = (a: Alert, v?: Verification) => (!v ? a.baseStatus : NATURES.indexOf(v.nature) <= 2 ? "confirme" : "ecarte");
 
-// Vignette illustrant une détection sur image optique à 30 cm (dessin procédural).
-function OpticalChip({ seed, count }: { seed: number; count: number }) {
-  const ref = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    const ctx = ref.current!.getContext("2d")!;
-    let a = seed * 9973 + 7;
-    const r = () => ((a = (a * 1664525 + 1013904223) >>> 0) / 4294967296);
-    ctx.fillStyle = "#74803f";
-    ctx.fillRect(0, 0, 280, 170);
-    for (let i = 0; i < 500; i++) {
-      ctx.fillStyle = ["#8a8f4a", "#5f7436", "#9c8c55", "#6c7d3c"][Math.floor(r() * 4)];
-      ctx.globalAlpha = 0.25;
-      ctx.beginPath();
-      ctx.arc(r() * 280, r() * 170, 3 + r() * 12, 0, 7);
-      ctx.fill();
-    }
-    for (let i = 0; i < 26; i++) {
-      const edge = r() < 0.5;
-      const x = edge ? (r() < 0.5 ? r() * 60 : 220 + r() * 60) : r() * 280;
-      const y = edge ? r() * 170 : (r() < 0.5 ? r() * 30 : 140 + r() * 30);
-      const rad = 10 + r() * 14;
-      ctx.globalAlpha = 0.35; ctx.fillStyle = "#000";
-      ctx.beginPath(); ctx.arc(x + 5, y + 5, rad, 0, 7); ctx.fill();
-      ctx.globalAlpha = 1; ctx.fillStyle = ["#1f4a22", "#285a2a", "#1a3f1f"][Math.floor(r() * 3)];
-      ctx.beginPath(); ctx.arc(x, y, rad, 0, 7); ctx.fill();
-    }
-    ctx.font = "10px sans-serif";
-    for (let i = 0; i < count; i++) {
-      const x = 80 + r() * 120, y = 45 + r() * 80, t = r() * Math.PI;
-      ctx.globalAlpha = 0.4; ctx.fillStyle = "#000";
-      ctx.beginPath(); ctx.ellipse(x + 3, y + 3, 9, 5, t, 0, 7); ctx.fill();
-      ctx.globalAlpha = 1; ctx.fillStyle = "#6e6862";
-      ctx.beginPath(); ctx.ellipse(x, y, 9, 5, t, 0, 7); ctx.fill();
-      ctx.strokeStyle = "#ffe14d"; ctx.lineWidth = 1.2;
-      ctx.strokeRect(x - 13, y - 13, 26, 26);
-      ctx.fillStyle = "#ffe14d";
-      ctx.fillText("0," + Math.floor(72 + r() * 24), x - 13, y - 16);
-    }
-  }, [seed, count]);
-  return <figure className="m-chip"><canvas ref={ref} width={280} height={170} /><figcaption>Illustration d'une détection sur image optique à 30 cm (type Pléiades Neo)</figcaption></figure>;
+// Détection d'éléphants sur image satellite à très haute résolution :
+// image de référence, avec ou sans les cadres de détection.
+function OpticalChip() {
+  const [boxes, setBoxes] = useState(true);
+  return <figure className="m-chip">
+    <img src={boxes ? "/elephants-detection.jpg" : "/elephants-satellite.jpg"} width={480} height={480} alt={boxes ? "Image satellite avec les éléphants encadrés par la détection" : "Image satellite d'un groupe d'éléphants parmi les arbres"} />
+    <figcaption>Exemple de détection d'éléphants sur image satellite à très haute résolution</figcaption>
+    <button className="m-link" onClick={() => setBoxes(!boxes)}>{boxes ? "Voir l'image sans les détections" : "Voir les détections"}</button>
+  </figure>;
 }
 
 export default function App() {
@@ -192,7 +161,7 @@ export default function App() {
       <span>{o.days === 0 ? "Aujourd'hui" : fmtDate(o.date)} · {o.source}</span>
       <span>Fiabilité : {o.reliability}</span>
     </button>
-    {openObs === o.id && o.source.startsWith("Pléiades") && <OpticalChip seed={o.id.charCodeAt(1)} count={o.count} />}
+    {openObs === o.id && o.source.startsWith("Pléiades") && <OpticalChip />}
   </li>;
 
   return <div className="m-app">
